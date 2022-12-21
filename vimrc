@@ -50,6 +50,12 @@ endfun
 
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
+" enable folding
+"set foldmethod=indent
+"set foldlevel=99
+"" Enable folding with the spacebar
+"nnoremap <space> za
+
 " --- BEGIN VUNDLE PLUGIN MANAGER ---
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -67,9 +73,64 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'itchyny/lightline.vim'
 set laststatus=2
 
+" jsonnet
+Plugin 'google/vim-jsonnet'
+let g:jsonnet_fmt_on_save = 0
+
+" jedi-vim for python
+Plugin 'davidhalter/jedi-vim'
+
+" cool shortcuts for jedi-vim
+" <leader>n -> (shows all the usages of a name) #leader default -> '\'
+" K -> Show Documentation/Pydoc
+" <leader>d -> Goto definition / (follow identifier as far as possible, includes imports and statements)
+" <leader>g -> Goto assignment (typical goto function)
+
+" ale asynchronous linting
+Plugin 'dense-analysis/ale'
+
+let g:ale_enabled = 1
+" let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
+let g:ale_fix_on_save = 0
+
+" add prettier markers
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+
+let g:ale_linters = {
+\   'python': ['flake8', 'pydocstyle', 'bandit', 'mypy'],
+\   'go': ['go', 'golint', 'errcheck'],
+\   'shell': ['shellcheck']
+\}
+
+let g:ale_fixers = {
+\   'python': ['black'],
+\   'sh': ['shfmt']
+\}
+
+" Ctrl + e to jump to next error
+nmap <silent> <C-e> <Plug>(ale_next_wrap)
+
+" Disabling highlighting
+let g:ale_set_highlights = 0
+
+" Only run linting when saving the file
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
+
+" Gruvbox color theme
+Plugin 'morhetz/gruvbox'
+" activate gruvbox color scheme
+autocmd vimenter * ++nested colorscheme gruvbox
+set termguicolors
+
+" supertab - tabcompletion
+Plugin 'ervandew/supertab'
+
 " NERDTREE, ctrl+n to toggle
-map <silent> <C-n> :NERDTreeFocus<CR>
 Plugin 'scrooloose/nerdtree'
+map <silent> <C-n> :NERDTreeFocus<CR>
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
